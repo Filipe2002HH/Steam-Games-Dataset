@@ -11,6 +11,7 @@ import interfaces.ComparadorAlgoritmoOrdenacao;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.text.ParseException;
+import java.util.List;
 
 public class Main {
 
@@ -18,7 +19,7 @@ public class Main {
 
         ManuseadorCSV gerenciadorCSV = new ManuseadorCSV();
 
-        AlgoritmoOrdenacao[] algoritmos = {
+        List<AlgoritmoOrdenacao> algoritmos = List.of(
                 new MergeSort(),
                 new HeapSort(),
                 new QuickSort(),
@@ -26,19 +27,19 @@ public class Main {
                 new SelectionSort(),
                 new InsertionSort(),
                 new CountingSortConquista()
-        };
+        );
 
-        ComparadorAlgoritmoOrdenacao[] comparadores = {
+        List<ComparadorAlgoritmoOrdenacao> comparadores = List.of(
                 new ComparadorDataLacamento(),
                 new ComparadorPreco(),
                 new ComparadorConquista()
-        };
+        );
 
-        CasoAlgoritmoOrdenacao[] casosTeste = {
+        List<CasoAlgoritmoOrdenacao> casosTeste = List.of(
                 new CasoPior(),
                 new CasoMedio(),
                 new CasoMelhor()
-        };
+        );
 
         System.out.println("=======================================================================");
         System.out.println("------ Iniciando a Execução das Transformações nos Arquivos CSV -------");

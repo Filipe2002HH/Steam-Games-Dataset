@@ -22,6 +22,6 @@ def format_csv(path_csv, output_path):
     return filtred_df
 
 format_csv(
-    "",
-    ""
+    "C:/Users/Arlete/IdeaProjects/Projeto-Pandinha/src/dataset/arquivosCsv/games.csv",
+    "C:/Users/Arlete/IdeaProjects/Projeto-Pandinha/src/dataset/arquivosCsv/games1.csv"
 )

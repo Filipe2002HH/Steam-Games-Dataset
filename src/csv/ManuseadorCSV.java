@@ -8,8 +8,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.util.*;
 
 public class ManuseadorCSV {
 
@@ -39,6 +38,7 @@ public class ManuseadorCSV {
         while ((linha = br.readLine()) != null) {
             conteudo.append(linha).append("\n");
         }
+
         br.close();
 
         // Quebrar o conteúdo em um array de linhas
@@ -70,11 +70,17 @@ public class ManuseadorCSV {
     }
 
     private String[] converterDatas(String[] dados) throws ParseException {
-        String[] linhasConvertidas = new String[dados.length];
-        linhasConvertidas[0] = dados[0];
+        Queue<String> filaLinhas = new LinkedList<>();
+        Collections.addAll(filaLinhas, dados);
 
-        for (int i = 1; i < dados.length; i++) {
-            String[] campos = dados[i].split(CHAR_DELIMITADOR);
+        String[] linhasConvertidas = new String[dados.length];
+        linhasConvertidas[0] = filaLinhas.poll(); // Cabeçalho
+
+        int index = 1;
+
+        while (!filaLinhas.isEmpty()) {
+            String linha = filaLinhas.poll();
+            String[] campos = linha.split(CHAR_DELIMITADOR);
 
             if (!campos[INDICE_COLUNA_DATA].isEmpty()) {
                 String campoData = campos[INDICE_COLUNA_DATA];
@@ -87,36 +93,30 @@ public class ManuseadorCSV {
                 }
             }
 
-            linhasConvertidas[i] = String.join(CHAR_DELIMITADOR, campos);
+            linhasConvertidas[index++] = String.join(CHAR_DELIMITADOR, campos);
         }
 
         return linhasConvertidas;
     }
 
     private String[] filtrarLinux(String[] dados) {
-        int count = 0;
+        Map<Integer, String> jogosLinuxMap = new HashMap<>();
 
         for (int i = 1; i < dados.length; i++) {
             String[] campos = dados[i].split(CHAR_DELIMITADOR);
             if (campos[INDICE_COLUNA_LINUX].equalsIgnoreCase("True")) {
-                count++;
+                jogosLinuxMap.put(i, dados[i]);
             }
         }
 
-        String[] jogosLinux = new String[count + 1];
+        String[] jogosLinux = new String[jogosLinuxMap.size() + 1];
         jogosLinux[0] = dados[0];
 
-        int index = 1;
-
-        for (int i = 1; i < dados.length; i++) {
-            String[] campos = dados[i].split(CHAR_DELIMITADOR);
-            if (campos[INDICE_COLUNA_LINUX].equalsIgnoreCase("True")) {
-                jogosLinux[index++] = dados[i];
-            }
-        }
+        System.arraycopy(Arrays.copyOfRange(jogosLinuxMap.values().toArray(String[]::new), 0, jogosLinuxMap.size()), 0, jogosLinux, 1, jogosLinuxMap.size());
 
         return jogosLinux;
     }
+
 
     private String[] filtrarPortugues(String[] dados) {
         int count = 0;
